@@ -37,7 +37,7 @@ object Matchers {
 
   lazy val word = acceptChar(ch => ch.isLetterOrDigit || ch == '_')
 
-  val alpha: Matcher = acceptChar(_.isLetter)
+  lazy val alpha: Matcher = acceptChar(_.isLetter)
 
   lazy val digit: Matcher = acceptChar(_.isDigit)
 
@@ -49,7 +49,10 @@ object Matchers {
       }
     }
 
-      //rep
+  lazy val con = (m: Matcher) =>
+    Matcher { input => m(input) mapMatches (m => List(m.mkString)) }
+
+  //rep
 
   //repN
 

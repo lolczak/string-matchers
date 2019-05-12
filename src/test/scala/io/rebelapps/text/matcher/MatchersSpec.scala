@@ -68,4 +68,11 @@ class MatchersSpec extends FlatSpec with SpecMatchers {
     }
   }
 
+  it should "concatenate matches" in {
+    val Pattern = con(alpha.+ ~ digit.+)
+    "abcd1234" match {
+      case Pattern(x) => x shouldBe "abcd1234"
+    }
+  }
+
 }
