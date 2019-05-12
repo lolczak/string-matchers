@@ -50,7 +50,7 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
 
   }
 
-  feature("Optional combinator") {
+  feature("Optional matching") {
 
     val Pattern = txt("aa") ~ txt("bb").?
 
@@ -78,6 +78,23 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
       }
     }
 
+  }
+
+  feature("Alternative matching") {
+
+    val Pattern = alpha.+ | digit.+
+
+    scenario("left") {
+      "abcd" match {
+        case Pattern(x) => x shouldBe "abcd"
+      }
+    }
+
+    scenario("right") {
+      "1234" match {
+        case Pattern(x) => x shouldBe "1234"
+      }
+    }
   }
 
 }

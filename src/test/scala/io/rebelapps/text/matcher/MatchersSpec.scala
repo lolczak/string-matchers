@@ -42,16 +42,4 @@ class MatchersSpec extends FlatSpec with SpecMatchers {
     }
   }
 
-
-
-  it should "match alternative of patterns" in {
-    val Pattern = alpha.+ | digit.+
-    "abcd" match {
-      case Pattern(x) => x shouldBe "abcd"
-    }
-    "1234" match {
-      case Pattern(x) => x shouldBe "1234"
-    }
-  }
-
 }
