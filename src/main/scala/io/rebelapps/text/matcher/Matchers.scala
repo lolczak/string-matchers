@@ -35,8 +35,8 @@ object Matchers {
       }
     }
 
-//  val word: Matcher = ???
-//
+  lazy val word = acceptChar(ch => ch.isLetter || ch.isDigit || ch == '_')
+
 //  val alpha: Matcher = ???
 //
 //  val digit: Matcher = ???

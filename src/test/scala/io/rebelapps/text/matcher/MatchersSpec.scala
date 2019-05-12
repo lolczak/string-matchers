@@ -44,4 +44,16 @@ class MatchersSpec extends FlatSpec with SpecMatchers {
     }
   }
 
+  it should "match alphanumeric characters" in {
+    val Pattern = word.+
+    "abcCxłó12_" match {
+      case Pattern(x) => x shouldBe "abcCxłó12_"
+    }
+    intercept[MatchError] {
+      "abcCx   łó12_" match {
+        case Pattern(x) => fail()
+      }
+    }
+  }
+
 }
