@@ -42,12 +42,7 @@ class MatchersSpec extends FlatSpec with SpecMatchers {
     }
   }
 
-  it should "concatenate matches" in {
-    val Pattern = con(alpha.+ ~ digit.+)
-    "abcd1234" match {
-      case Pattern(x) => x shouldBe "abcd1234"
-    }
-  }
+
 
   it should "match alternative of patterns" in {
     val Pattern = alpha.+ | digit.+

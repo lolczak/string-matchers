@@ -69,4 +69,15 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
     }
   }
 
+  feature("Concatenation of matches") {
+
+    scenario("correct string") {
+      val Pattern = con(alpha.+ ~ digit.+)
+      "abcd1234" match {
+        case Pattern(x) => x shouldBe "abcd1234"
+      }
+    }
+
+  }
+
 }
