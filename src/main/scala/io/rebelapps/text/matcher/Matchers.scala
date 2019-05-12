@@ -35,14 +35,13 @@ object Matchers {
       }
     }
 
-  lazy val word = acceptChar(ch => ch.isLetter || ch.isDigit || ch == '_')
+  lazy val word = acceptChar(ch => ch.isLetterOrDigit || ch == '_')
 
-//  val alpha: Matcher = ???
-//
+  val alpha: Matcher = acceptChar(_.isLetter)
 
-  val digit: Matcher = acceptChar(_.isDigit)
+  lazy val digit: Matcher = acceptChar(_.isDigit)
 
-  val opt = (m: Matcher) =>
+  lazy val opt = (m: Matcher) =>
     Matcher { input =>
       m(input) match {
         case NoMatch(next) => Match(Nil, next)
