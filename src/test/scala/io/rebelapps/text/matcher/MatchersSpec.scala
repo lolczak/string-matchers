@@ -56,4 +56,16 @@ class MatchersSpec extends FlatSpec with SpecMatchers {
     }
   }
 
+  it should "match digits" in {
+    val Pattern = digit.+
+    "122032498432" match {
+      case Pattern(x) => x shouldBe "122032498432"
+    }
+    intercept[MatchError] {
+      "abcCx   łó12_" match {
+        case Pattern(x) => fail()
+      }
+    }
+  }
+
 }

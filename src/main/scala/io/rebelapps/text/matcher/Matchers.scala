@@ -39,7 +39,8 @@ object Matchers {
 
 //  val alpha: Matcher = ???
 //
-//  val digit: Matcher = ???
+
+  val digit: Matcher = acceptChar(_.isDigit)
 
   val opt = (m: Matcher) =>
     Matcher { input =>
