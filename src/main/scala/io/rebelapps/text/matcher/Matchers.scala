@@ -51,10 +51,10 @@ object Matchers {
 
   lazy val con = (m: Matcher) => Matcher { input => m(input) mapMatches (m => List(m.mkString)) }
 
-  lazy val alt = (x: Matcher) => (y: Matcher) =>
+  lazy val alt = (left: Matcher) => (right: Matcher) =>
     Matcher { input =>
-      x(input) match {
-        case NoMatch(_) => y(input)
+      left(input) match {
+        case NoMatch(_) => right(input)
         case other      => other
       }
     }
