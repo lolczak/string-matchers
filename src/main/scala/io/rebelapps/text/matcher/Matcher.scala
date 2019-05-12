@@ -24,7 +24,13 @@ abstract class Matcher extends (List[Char] => MatcherResult) {
       }
     }
 
-  def ~>(next: Matcher): Matcher = ???
+  def ~>(next: Matcher): Matcher =
+    Matcher { input =>
+      this.apply(input) match {
+        case Match(_, rest) => next(rest)
+        case other          => other
+      }
+    }
 
   def unapplySeq(input: String): Option[List[String]] = {
     apply(input.toList) match {

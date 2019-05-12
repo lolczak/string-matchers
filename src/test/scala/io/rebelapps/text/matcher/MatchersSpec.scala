@@ -3,7 +3,8 @@ import io.rebelapps.text.matcher.Matchers._
 import org.scalatest.{FlatSpec, Matchers => SpecMatchers}
 
 class MatchersSpec extends FlatSpec with SpecMatchers {
-  it should "work" in {
+
+  "String matchers" should "work" in {
     val Pattern = (txt("aa") <~ whitespaces) ~ txt("bb") ~ ch('c').+ <~ whitespaces
     "aa    bbcc    " match {
       case Pattern(a, b, c) =>
@@ -21,6 +22,13 @@ class MatchersSpec extends FlatSpec with SpecMatchers {
     val Pattern = txt("aa") <~ txt("bb")
     "aabb" match {
       case Pattern(x) => x shouldBe "aa"
+    }
+  }
+
+  it should "return right matches" in {
+    val Pattern = txt("aa") ~> txt("bb")
+    "aabb" match {
+      case Pattern(x) => x shouldBe "bb"
     }
   }
 
