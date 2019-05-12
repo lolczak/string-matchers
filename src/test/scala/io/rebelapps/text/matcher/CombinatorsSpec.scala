@@ -7,6 +7,25 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
 
   info("Available combinators with examples")
 
+  feature("At least once repetition") {
+
+    val Pattern = rep1(txt("ab"))
+
+    scenario("correct string") {
+      "ababab" match {
+        case Pattern(x) => x shouldBe "ababab"
+      }
+    }
+
+    scenario("incorrect string") {
+      intercept[MatchError] {
+        "aacbb" match {
+          case Pattern(x, y) => fail()
+        }
+      }
+    }
+  }
+
   feature("Sequential composition") {
 
     val Pattern = txt("aa") ~ txt("bb")
