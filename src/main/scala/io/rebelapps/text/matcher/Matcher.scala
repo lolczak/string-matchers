@@ -10,6 +10,8 @@ abstract class Matcher extends (List[Char] => MatcherResult) {
 
   lazy val ? = opt(this)
 
+  def |(that: Matcher): Matcher = alt(this)(that)
+
   def ~(next: Matcher): Matcher =
     Matcher { input =>
       this.apply(input) match {

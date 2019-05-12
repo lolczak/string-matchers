@@ -76,7 +76,7 @@ class MatchersSpec extends FlatSpec with SpecMatchers {
   }
 
   it should "match alternative of patterns" in {
-    val Pattern = alt(alpha.+)(digit.+)
+    val Pattern = alpha.+ | digit.+
     "abcd" match {
       case Pattern(x) => x shouldBe "abcd"
     }
