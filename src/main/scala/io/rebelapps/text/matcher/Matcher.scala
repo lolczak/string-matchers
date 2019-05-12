@@ -1,12 +1,14 @@
 package io.rebelapps.text.matcher
 
-import io.rebelapps.text.matcher.Matchers.rep1
+import io.rebelapps.text.matcher.Matchers._
 
 abstract class Matcher extends (List[Char] => MatcherResult) {
 
   def apply(input: List[Char]): MatcherResult
 
   lazy val + = rep1(this)
+
+  lazy val ? = opt(this)
 
   def ~(next: Matcher): Matcher =
     Matcher { input =>
