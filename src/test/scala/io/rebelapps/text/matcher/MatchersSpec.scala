@@ -18,20 +18,6 @@ class MatchersSpec extends FlatSpec with SpecMatchers {
 
   }
 
-  it should "return left matches" in {
-    val Pattern = txt("aa") <~ txt("bb")
-    "aabb" match {
-      case Pattern(x) => x shouldBe "aa"
-    }
-  }
-
-  it should "return right matches" in {
-    val Pattern = txt("aa") ~> txt("bb")
-    "aabb" match {
-      case Pattern(x) => x shouldBe "bb"
-    }
-  }
-
   it should "optionally match pattern" in {
     val Pattern = txt("aa") ~ txt("bb").?
     "aabb" match {
