@@ -32,4 +32,16 @@ class MatchersSpec extends FlatSpec with SpecMatchers {
     }
   }
 
+  it should "optionally match pattern" in {
+    val Pattern = txt("aa") ~ opt(txt("bb"))
+    "aabb" match {
+      case Pattern(x, y) =>
+        x shouldBe "aa"
+        y shouldBe "bb"
+    }
+    "aa" match {
+      case Pattern(x) => x shouldBe "aa"
+    }
+  }
+
 }

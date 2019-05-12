@@ -24,7 +24,7 @@ object Matchers {
   lazy val ch = (char: Char) =>
     Matcher {
       case head :: tail if head == char => Match(char.toString, tail)
-      case input => NoMatch(input)
+      case input                        => NoMatch(input)
     }
 
   lazy val txt = (const: String) =>
@@ -42,9 +42,15 @@ object Matchers {
 //
 //  val digit: Matcher = ???
 
-  //val opt
+  val opt = (m: Matcher) =>
+    Matcher { input =>
+      m(input) match {
+        case NoMatch(next) => Match(Nil, next)
+        case other         => other
+      }
+    }
 
-  //rep
+      //rep
 
   //repN
 
