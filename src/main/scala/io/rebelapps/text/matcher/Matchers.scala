@@ -15,10 +15,7 @@ object Matchers {
         }
       }
 
-      loop(next) match {
-        case Match(terms, tail) => Match(terms.mkString, tail)
-        case other              => other
-      }
+      loop(next) mapMatches(m => List(m.mkString))
     }
 
   lazy val ch = (char: Char) =>
