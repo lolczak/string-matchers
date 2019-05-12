@@ -50,4 +50,23 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
 
   }
 
+  feature("Optional combinator") {
+
+    val Pattern = txt("aa") ~ txt("bb").?
+
+    scenario("some") {
+      "aabb" match {
+        case Pattern(x, y) =>
+          x shouldBe "aa"
+          y shouldBe "bb"
+      }
+    }
+
+    scenario("none") {
+      "aa" match {
+        case Pattern(x) => x shouldBe "aa"
+      }
+    }
+  }
+
 }

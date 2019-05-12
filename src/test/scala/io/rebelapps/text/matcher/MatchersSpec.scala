@@ -18,18 +18,6 @@ class MatchersSpec extends FlatSpec with SpecMatchers {
 
   }
 
-  it should "optionally match pattern" in {
-    val Pattern = txt("aa") ~ txt("bb").?
-    "aabb" match {
-      case Pattern(x, y) =>
-        x shouldBe "aa"
-        y shouldBe "bb"
-    }
-    "aa" match {
-      case Pattern(x) => x shouldBe "aa"
-    }
-  }
-
   it should "match alphanumeric characters" in {
     val Pattern = word.+
     "abcCxłó12_" match {
