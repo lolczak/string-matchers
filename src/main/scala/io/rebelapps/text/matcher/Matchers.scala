@@ -18,11 +18,13 @@ object Matchers {
       loop(next) mapMatches(m => List(m.mkString))
     }
 
-  lazy val ch = (char: Char) =>
+  lazy val acceptChar = (f: Char => Boolean) =>
     Matcher {
-      case head :: tail if head == char => Match(char.toString, tail)
-      case input                        => NoMatch(input)
+      case head :: tail if f(head) => Match(head.toString, tail)
+      case input                   => NoMatch(input)
     }
+
+  lazy val ch = (ch: Char) => acceptChar(_ == ch)
 
   lazy val txt = (const: String) =>
     Matcher { input =>
