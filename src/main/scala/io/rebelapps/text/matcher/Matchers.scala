@@ -18,6 +18,8 @@ object Matchers {
       loop(next) mapMatches(m => List(m.mkString))
     }
 
+  //rep
+
   lazy val acceptChar = (f: Char => Boolean) =>
     Matcher {
       case head :: tail if f(head) => Match(head.toString, tail)
@@ -58,10 +60,6 @@ object Matchers {
         case other      => other
       }
     }
-
-  //rep
-
-  //repN
 
   lazy val whitespace: Matcher =
     Matcher {

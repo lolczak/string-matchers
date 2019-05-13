@@ -47,6 +47,6 @@ abstract class Matcher extends (List[Char] => MatcherResult) {
 
 object Matcher {
 
-  def apply(f: List[Char] => MatcherResult): Matcher = new Matcher {def apply(input: List[Char]): MatcherResult = f(input)}
+  def apply(f: List[Char] => MatcherResult): Matcher = new Matcher { def apply(input: List[Char]): MatcherResult = f(input) }
 
 }

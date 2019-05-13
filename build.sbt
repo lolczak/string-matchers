@@ -12,26 +12,13 @@ val slf4jVersion = "1.7.25"
 val commonsLangVersion = "3.3.2"
 val scalaLoggingVersion = "3.7.2"
 
-lazy val functional = Seq(
-    "com.chuusai" %% "shapeless" % "2.3.3",
-    "org.typelevel" %% "cats-core" % catsVersion,
-    "org.typelevel" %% "cats-effect" % catsEffectVersion,
-)
-lazy val circe = Seq(
-    "io.circe" %% "circe-core" % circeVersion,
-    "io.circe" %% "circe-generic" % circeVersion,
-    "io.circe" %% "circe-parser" % circeVersion,
-)
 lazy val testLibs = Seq(
     "org.scalatest" %% "scalatest" % scalaTestVersion % Test,
     "org.scalacheck" %% "scalacheck" % scalaCheckVersion % Test
 )
 
 libraryDependencies ++= Seq(
-    "org.apache.commons" % "commons-lang3" % commonsLangVersion,
-    "org.slf4j" % "slf4j-api" % slf4jVersion,
-    "ch.qos.logback" % "logback-classic" % logbackVersion,
-    "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion exclude("org.scala-lang", "scala-reflect")
+    "com.chuusai" %% "shapeless" % "2.3.3"
 ) ++ testLibs
 
 lazy val `string-matchers` = project in file(".")
