@@ -1,10 +1,10 @@
 package io.rebelapps.text.typesafe
 
-import io.rebelapps.text.typesafe.TsMatcher.acceptChar
+import io.rebelapps.text.typesafe.Pattern.acceptChar
 import org.scalatest.{FlatSpec, Matchers}
 import scala.language.reflectiveCalls
 
-class TsMatcherSpec extends FlatSpec with Matchers {
+class PatternSpec extends FlatSpec with Matchers {
 
   "A type safe matcher" should "work" in {
     val Pattern =

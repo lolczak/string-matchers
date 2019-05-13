@@ -3,20 +3,20 @@ package io.rebelapps.text.typesafe
 import shapeless.ops.hlist.{Prepend, Tupler}
 import shapeless.{::, HList, HNil}
 
-abstract class TsMatcher[A <: HList] extends (List[Char] => TsMatcherResult[A]) { self =>
+abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) { self =>
 
   override def apply(input: List[Char]): TsMatcherResult[A]
 
-  def ~[B <: HList](next: TsMatcher[B])(implicit prepend : Prepend[A, B]): TsMatcher[prepend.Out] =
-    TsMatcher { input =>
+  def ~[B <: HList](next: Pattern[B])(implicit prepend : Prepend[A, B]): Pattern[prepend.Out] =
+    Pattern { input =>
       this.apply(input) match {
         case TsMatch(terms, rest) => next(rest).mapMatches[prepend.Out](suffix => terms.++(suffix)(prepend))
         case _                    => TsNoMatch[prepend.Out](input)
       }
     }
 
-  def <~[B <: HList](next: TsMatcher[B]): TsMatcher[A] =
-    TsMatcher { input =>
+  def <~[B <: HList](next: Pattern[B]): Pattern[A] =
+    Pattern { input =>
       this.apply(input) match {
         case TsMatch(terms, rest) => next(rest) mapMatches[A] (_ => terms)
         case _                    => TsNoMatch[A](input)
@@ -32,7 +32,7 @@ abstract class TsMatcher[A <: HList] extends (List[Char] => TsMatcherResult[A]) 
 
   def compile(implicit prepend: Prepend[A, Seq[Nothing] :: HNil]) = new {
 
-    private val newMatcher: TsMatcher[prepend.Out] = TsMatcher { input =>
+    private val newMatcher: Pattern[prepend.Out] = Pattern { input =>
       self.apply(input) match {
         case TsMatch(terms, rest) => TsMatch(terms.:+(Seq.empty)(prepend), rest)
         case _ => TsNoMatch[prepend.Out](input)
@@ -58,13 +58,13 @@ class MatcherExtractor[A](f: String => Option[A]) {
 
 }
 
-object TsMatcher {
+object Pattern {
 
-  def apply[A <: HList](f: List[Char] => TsMatcherResult[A]): TsMatcher[A] =
-    new TsMatcher[A] { def apply(input: List[Char]): TsMatcherResult[A] = f(input) }
+  def apply[A <: HList](f: List[Char] => TsMatcherResult[A]): Pattern[A] =
+    new Pattern[A] { def apply(input: List[Char]): TsMatcherResult[A] = f(input) }
 
   lazy val acceptChar = (f: Char => Boolean) =>
-    TsMatcher[String :: HNil] {
+    Pattern[String :: HNil] {
       case input if f(input.head)  => TsMatch[String :: HNil](input.head.toString :: HNil, input.tail)
       case input                   => TsNoMatch[String :: HNil](input)
     }
