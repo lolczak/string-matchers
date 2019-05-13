@@ -3,11 +3,11 @@ package io.rebelapps.text.typesafe
 import shapeless.ops.hlist.{Prepend, Tupler}
 import shapeless.{::, HList, HNil}
 
-abstract class TsMatcher[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
+abstract class TsMatcher[A <: HList] extends (List[Char] => TsMatcherResult[A]) { self =>
 
   override def apply(input: List[Char]): TsMatcherResult[A]
 
-  def ~[B <: HList](next: TsMatcher[B])(implicit prepend : Prepend[A, B]) : TsMatcher[prepend.Out] =
+  def ~[B <: HList](next: TsMatcher[B])(implicit prepend : Prepend[A, B]): TsMatcher[prepend.Out] =
     TsMatcher { input =>
       this.apply(input) match {
         case TsMatch(terms, rest) => next(rest).mapMatches[prepend.Out](suffix => terms.++(suffix)(prepend))
@@ -30,21 +30,31 @@ abstract class TsMatcher[A <: HList] extends (List[Char] => TsMatcherResult[A]) 
     }
   }
 
-  def compile(implicit tupler : Tupler[A]): MatcherExtractor[tupler.Out] = {
+  def compile(implicit prepend: Prepend[A, Seq[Nothing] :: HNil]) = new {
 
-    new MatcherExtractor[tupler.Out]({ input: String =>
-      apply(input.toList) match {
-        case TsMatch(matches, Nil) => Some(matches.tupled(tupler))
-        case _                     => None
+    private val newMatcher: TsMatcher[prepend.Out] = TsMatcher { input =>
+      self.apply(input) match {
+        case TsMatch(terms, rest) => TsMatch(terms.:+(Seq.empty)(prepend), rest)
+        case _ => TsNoMatch[prepend.Out](input)
       }
-    })
+    }
+
+    def it(implicit tupler : Tupler[prepend.Out]): MatcherExtractor[tupler.Out] = {
+
+      new MatcherExtractor[tupler.Out]({ input: String =>
+        newMatcher.apply(input.toList) match {
+          case TsMatch(matches, Nil) => Some(matches.tupled(tupler))
+          case _                     => None
+        }
+      })
+    }
+
   }
 
 }
 
 class MatcherExtractor[A](f: String => Option[A]) {
-  import shapeless.syntax.std.tuple._
-  def unapplySeq(input: String): Option[(A, Seq[Nothing])] = f(input).map(_ -> Seq.empty)
+  def unapplySeq(input: String): Option[A] = f(input)
 
 }
 
