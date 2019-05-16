@@ -59,15 +59,15 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
 
   }
 
-//  feature("Right sequential composition") {
-//
-//    scenario("correct string") {
-//      val Pattern = txt("aa") ~> txt("bb")
-//      "aabb" match {
-//        case Pattern(x) => x shouldBe "bb"
-//      }
-//    }
-//
-//  }
+  feature("Right sequential composition") {
+
+    scenario("correct string") {
+      val Pattern = (txt("aa") ~> txt("bb")).compile
+      "aabb" match {
+        case Pattern(x) => x._1 shouldBe "bb"
+      }
+    }
+
+  }
 
 }

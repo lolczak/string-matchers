@@ -20,7 +20,7 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
     Pattern { input =>
       this.apply(input) match {
         case TsMatch(terms, rest) => next(rest).mapMatches[prepend.Out](suffix => terms.++(suffix)(prepend))
-        case _ => TsNoMatch[prepend.Out](input)
+        case _                    => TsNoMatch[prepend.Out](input)
       }
     }
 
@@ -28,7 +28,15 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
     Pattern { input =>
       this.apply(input) match {
         case TsMatch(terms, rest) => next(rest) mapMatches[A] (_ => terms)
-        case _ => TsNoMatch[A](input)
+        case _                    => TsNoMatch[A](input)
+      }
+    }
+
+  def ~>[B <: HList](next: Pattern[B]): Pattern[B] =
+    Pattern { input =>
+      this.apply(input) match {
+        case TsMatch(terms, rest) => next(rest)
+        case _                    => TsNoMatch[B](input)
       }
     }
 
