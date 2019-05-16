@@ -3,6 +3,7 @@ package io.rebelapps.text.typesafe
 import shapeless.HList
 
 sealed trait TsMatcherResult[A <: HList] {
+
   val next: List[Char]
 
   def mapMatches[B <: HList](f: A => B): TsMatcherResult[B]
