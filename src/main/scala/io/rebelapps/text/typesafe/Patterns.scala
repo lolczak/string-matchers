@@ -14,4 +14,6 @@ object Patterns {
 
   lazy val digit = acceptChar(_.isDigit)
 
+  lazy val word = acceptChar(ch => ch.isLetterOrDigit || ch == '_')
+
 }

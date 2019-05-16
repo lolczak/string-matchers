@@ -73,6 +73,32 @@ class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
 
   }
 
+  feature("word matcher") {
+
+    val Pattern = word.compile
+
+    scenario("match") {
+      "a" match {
+        case Pattern(x) => x._1 shouldBe "a"
+      }
+      "_" match {
+        case Pattern(x) => x._1 shouldBe "_"
+      }
+      "9" match {
+        case Pattern(x) => x._1 shouldBe "9"
+      }
+    }
+
+    scenario("no match") {
+      intercept[MatchError] {
+        " " match {
+          case Pattern(x) => fail()
+        }
+      }
+    }
+
+  }
+
 }
 
 case object A
