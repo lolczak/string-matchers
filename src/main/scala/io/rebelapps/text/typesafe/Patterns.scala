@@ -10,4 +10,6 @@ object Patterns {
       case input                  => TsNoMatch[String :: HNil](input)
     }
 
+  lazy val space = acceptChar(_.isWhitespace)
+
 }

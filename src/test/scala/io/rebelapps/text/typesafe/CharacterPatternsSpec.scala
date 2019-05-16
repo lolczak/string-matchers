@@ -1,6 +1,6 @@
 package io.rebelapps.text.typesafe
 
-import io.rebelapps.text.typesafe.Patterns.acceptChar
+import io.rebelapps.text.typesafe.Patterns._
 import org.scalatest.{FeatureSpec, Matchers => SpecMatchers}
 
 class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
@@ -20,7 +20,30 @@ class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
     scenario("no match") {
       intercept[MatchError] {
         "b" match {
-          case Pattern(x) => x shouldBe "a"
+          case Pattern(x) => fail()
+        }
+      }
+    }
+
+  }
+
+  feature("whitespace matcher") {
+
+    val Pattern = space.compile
+
+    scenario("match") {
+      " " match {
+        case Pattern(x) => x._1 shouldBe " "
+      }
+      "\t" match {
+        case Pattern(x) => x._1 shouldBe "\t"
+      }
+    }
+
+    scenario("no match") {
+      intercept[MatchError] {
+        "b" match {
+          case Pattern(x) => fail()
         }
       }
     }
