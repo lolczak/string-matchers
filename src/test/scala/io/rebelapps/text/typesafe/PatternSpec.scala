@@ -1,6 +1,6 @@
 package io.rebelapps.text.typesafe
 
-import io.rebelapps.text.typesafe.Pattern.acceptChar
+import io.rebelapps.text.typesafe.Patterns.acceptChar
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.language.reflectiveCalls
