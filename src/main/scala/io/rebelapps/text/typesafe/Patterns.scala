@@ -18,4 +18,13 @@ object Patterns {
 
   lazy val alpha = acceptChar(_.isLetter)
 
+  lazy val txt = (const: String) =>
+    Pattern { input =>
+      if (input.startsWith(const.toSeq)) {
+        TsMatch[String :: HNil](const :: HNil, input.drop(const.length))
+      } else {
+        TsNoMatch[String :: HNil](input)
+      }
+    }
+
 }
