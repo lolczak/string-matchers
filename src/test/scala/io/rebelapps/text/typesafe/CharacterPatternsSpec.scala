@@ -50,6 +50,29 @@ class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
 
   }
 
+  feature("digit matcher") {
+
+    val Pattern = digit.compile
+
+    scenario("match") {
+      "1" match {
+        case Pattern(x) => x._1 shouldBe "1"
+      }
+      "9" match {
+        case Pattern(x) => x._1 shouldBe "9"
+      }
+    }
+
+    scenario("no match") {
+      intercept[MatchError] {
+        "_" match {
+          case Pattern(x) => fail()
+        }
+      }
+    }
+
+  }
+
 }
 
 case object A

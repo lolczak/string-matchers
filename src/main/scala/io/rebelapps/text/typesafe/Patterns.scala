@@ -12,4 +12,6 @@ object Patterns {
 
   lazy val space = acceptChar(_.isWhitespace)
 
+  lazy val digit = acceptChar(_.isDigit)
+
 }
