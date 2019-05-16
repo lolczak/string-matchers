@@ -3,7 +3,8 @@ package io.rebelapps.text.typesafe
 import shapeless.ops.hlist.{Prepend, Tupler}
 import shapeless.{::, HList, HNil}
 
-abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) { self =>
+abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
+  self =>
 
   override def apply(input: List[Char]): TsMatcherResult[A]
 
@@ -15,11 +16,11 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) { 
       }
     }
 
-  def ~[B <: HList](next: Pattern[B])(implicit prepend : Prepend[A, B]): Pattern[prepend.Out] =
+  def ~[B <: HList](next: Pattern[B])(implicit prepend: Prepend[A, B]): Pattern[prepend.Out] =
     Pattern { input =>
       this.apply(input) match {
         case TsMatch(terms, rest) => next(rest).mapMatches[prepend.Out](suffix => terms.++(suffix)(prepend))
-        case _                    => TsNoMatch[prepend.Out](input)
+        case _ => TsNoMatch[prepend.Out](input)
       }
     }
 
@@ -27,42 +28,29 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) { 
     Pattern { input =>
       this.apply(input) match {
         case TsMatch(terms, rest) => next(rest) mapMatches[A] (_ => terms)
-        case _                    => TsNoMatch[A](input)
+        case _ => TsNoMatch[A](input)
       }
     }
 
-  def unapplySeq(input: String)(implicit tupler : Tupler[A]): Option[tupler.Out] = {
+  def unapplySeq(input: String)(implicit tupler: Tupler[A]): Option[tupler.Out] = {
     apply(input.toList) match {
       case TsMatch(matches, Nil) => Some(matches.tupled(tupler))
-      case _                     => None
+      case _ => None
     }
   }
 
-  def compile(implicit prepend: Prepend[A, Seq[Nothing] :: HNil]) = new {
-
-    private val newMatcher: Pattern[prepend.Out] = Pattern { input =>
-      self.apply(input) match {
-        case TsMatch(terms, rest) => TsMatch(terms.:+(Seq.empty)(prepend), rest)
-        case _ => TsNoMatch[prepend.Out](input)
+  def compile(implicit tupler: Tupler[A]): MatcherExtractor[tupler.Out] =
+    new MatcherExtractor[tupler.Out]({ input: String =>
+      apply(input.toList) match {
+        case TsMatch(matches, Nil) => Some(matches.tupled(tupler))
+        case _ => None
       }
-    }
-
-    def it(implicit tupler : Tupler[prepend.Out]): MatcherExtractor[tupler.Out] = {
-
-      new MatcherExtractor[tupler.Out]({ input: String =>
-        newMatcher.apply(input.toList) match {
-          case TsMatch(matches, Nil) => Some(matches.tupled(tupler))
-          case _                     => None
-        }
-      })
-    }
-
-  }
-
+    })
 }
 
 class MatcherExtractor[A](f: String => Option[A]) {
-  def unapplySeq(input: String): Option[A] = f(input)
+
+  def unapplySeq(input: String): Option[(A, Seq[Nothing])] = f(input).map(_ -> Seq.empty)
 
 }
 
