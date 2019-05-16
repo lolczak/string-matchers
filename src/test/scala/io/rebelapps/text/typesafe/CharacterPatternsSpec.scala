@@ -121,6 +121,7 @@ class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
     }
 
   }
+
   feature("text matcher") {
 
     val Pattern = txt("abc").compile
@@ -128,6 +129,30 @@ class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
     scenario("match") {
       "abc" match {
         case Pattern(x) => x._1 shouldBe "abc"
+      }
+    }
+
+    scenario("no match") {
+      intercept[MatchError] {
+        "1" match {
+          case Pattern(x) => fail()
+        }
+      }
+    }
+
+  }
+
+  feature("punctuation characters matcher") {
+
+    val Pattern = punct.compile
+
+    scenario("match") {
+      val punct = """][!"#$%&'()*+,./:;<=>?@\^_`{|}~-""".toCharArray.toList
+
+      punct foreach { char =>
+        s"$char" match {
+          case Pattern(x) => x._1 shouldBe s"$char"
+        }
       }
     }
 

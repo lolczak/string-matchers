@@ -10,6 +10,8 @@ object Patterns {
       case input                  => TsNoMatch[String :: HNil](input)
     }
 
+  lazy val ch = (ch: Char) => acceptChar(_ == ch)
+
   lazy val space = acceptChar(_.isWhitespace)
 
   lazy val digit = acceptChar(_.isDigit)
@@ -26,5 +28,9 @@ object Patterns {
         TsNoMatch[String :: HNil](input)
       }
     }
+
+  private lazy val punctuationCharacters = """][!"#$%&'()*+,./:;<=>?@\^_`{|}~-""".toCharArray.toSet
+
+  lazy val punct = acceptChar(punctuationCharacters.contains)
 
 }
