@@ -11,7 +11,7 @@ class PatternSpec extends FlatSpec with Matchers {
     case object A
     case object B
 
-    val Pattern: MatcherExtractor[(A.type, String)] =
+    val Pattern: Matcher[(A.type, String)] =
       (acceptChar(_ == 'a').map((_:String) => A) ~ acceptChar(_ == 'b') <~ acceptChar(_ == 'c')).compile
 
     "abc" match {

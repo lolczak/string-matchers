@@ -32,15 +32,8 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
       }
     }
 
-  def unapplySeq(input: String)(implicit tupler: Tupler[A]): Option[tupler.Out] = {
-    apply(input.toList) match {
-      case TsMatch(matches, Nil) => Some(matches.tupled(tupler))
-      case _ => None
-    }
-  }
-
-  def compile(implicit tupler: Tupler[A]): MatcherExtractor[tupler.Out] =
-    new MatcherExtractor[tupler.Out]({ input: String =>
+  def compile(implicit tupler: Tupler[A]): Matcher[tupler.Out] =
+    new Matcher[tupler.Out]({ input: String =>
       apply(input.toList) match {
         case TsMatch(matches, Nil) => Some(matches.tupled(tupler))
         case _ => None
@@ -48,7 +41,7 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
     })
 }
 
-class MatcherExtractor[A](f: String => Option[A]) {
+class Matcher[A](f: String => Option[A]) {
 
   def unapplySeq(input: String): Option[(A, Seq[Nothing])] = f(input).map(_ -> Seq.empty)
 
