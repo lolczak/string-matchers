@@ -1,6 +1,8 @@
 package io.rebelapps.text.typesafe
 
-import shapeless.{::, HNil}
+import shapeless.{::, HList, HNil}
+
+import scala.annotation.tailrec
 
 object Patterns {
 
@@ -32,5 +34,19 @@ object Patterns {
   private lazy val punctuationCharacters = """][!"#$%&'()*+,./:;<=>?@\^_`{|}~-""".toCharArray.toSet
 
   lazy val punct = acceptChar(punctuationCharacters.contains)
+
+  def rep1[A <: HList](p: Pattern[A]):Pattern[List[A] :: HNil] =
+    Pattern { next =>
+      @tailrec
+      def loop(next: List[Char], acc: List[A] = List.empty): TsMatcherResult[List[A] :: HNil] = {
+        p(next) match {
+          case TsNoMatch(_) if acc.isEmpty  => TsNoMatch[List[A] :: HNil](next)
+          case TsNoMatch(_) if acc.nonEmpty => TsMatch[List[A] :: HNil](acc :: HNil, next)
+          case TsMatch(t, n)                => loop(n, acc :+ t)
+        }
+      }
+
+      loop(next)
+    }
 
 }
