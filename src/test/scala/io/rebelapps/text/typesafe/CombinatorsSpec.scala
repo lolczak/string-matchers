@@ -27,4 +27,25 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
     }
   }
 
+  feature("Sequential composition") {
+
+    val Pattern = txt("aa") ~ txt("bb") compile
+
+    scenario("correct string") {
+      "aabb" match {
+        case Pattern((x, y)) =>
+          x shouldBe "aa"
+          y shouldBe "bb"
+      }
+    }
+
+    scenario("incorrect string") {
+      intercept[MatchError] {
+        "aacbb" match {
+          case Pattern((x, y)) => fail()
+        }
+      }
+    }
+  }
+
 }
