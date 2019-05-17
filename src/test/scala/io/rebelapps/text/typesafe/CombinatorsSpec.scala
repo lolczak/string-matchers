@@ -3,6 +3,7 @@ package io.rebelapps.text.typesafe
 import io.rebelapps.text.typesafe.Patterns._
 import org.scalatest.{FeatureSpec, Matchers => SpecMatchers}
 import shapeless._
+
 import scala.language.reflectiveCalls
 
 class CombinatorsSpec extends FeatureSpec with SpecMatchers {
@@ -134,6 +135,23 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
         case Pattern(x, y) =>
           x shouldBe "aa"
           y shouldBe None
+      }
+    }
+  }
+
+  feature("Alternative matching") {
+
+    val Pattern = alt(txt("abcd"))(txt("1234")).interpret.it
+
+    scenario("left") {
+      "abcd" match {
+        case Pattern(x) => x shouldBe Left("abcd" :: HNil)
+      }
+    }
+
+    scenario("right") {
+      "1234" match {
+        case Pattern(x) => x shouldBe Right("1234" :: HNil)
       }
     }
   }

@@ -62,11 +62,19 @@ object Patterns {
       loop(next)
     }
 
-  def opt[A <: HList](p: Pattern[A]):Pattern[Option[A] :: HNil] =
-    Pattern { next =>
+  def opt[A <: HList](p: Pattern[A]): Pattern[Option[A] :: HNil] =
+    Pattern { next => //todo rename to input
       p(next) match {
         case TsNoMatch(_)  => TsMatch[Option[A] :: HNil](None :: HNil, next)
         case TsMatch(t, n) => TsMatch[Option[A] :: HNil](Some(t) :: HNil, n)
+      }
+    }
+
+  def alt[A <: HList, B <: HList](left: Pattern[A])(right: Pattern[B]): Pattern[Either[A, B] :: HNil] =
+    Pattern { input =>
+      left(input) match {
+        case TsMatch(matches, next) => TsMatch[Either[A, B] :: HNil](Left(matches) :: HNil, next)
+        case TsNoMatch(_)           => right(input).mapMatches(m => Right(m) :: HNil)
       }
     }
 
