@@ -157,7 +157,7 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
     }
   }
 
-  feature("Concatenation feature") {
+  feature("Concatenation combinator") {
 
     val Pattern = con(rep1(txt("ab"))).interpret.it
 
