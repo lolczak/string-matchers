@@ -50,7 +50,7 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
 
   def interpret(implicit prepend: Prepend[A, Seq[Nothing] :: HNil]) = new {
 
-    private val newMatcher: Pattern[prepend.Out] = Pattern { input =>
+    private val newPattern: Pattern[prepend.Out] = Pattern { input =>
       self.apply(input) match {
         case TsMatch(terms, rest) => TsMatch(terms.:+(Seq.empty)(prepend), rest)
         case _                    => TsNoMatch[prepend.Out](input)
@@ -60,7 +60,7 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
     def it(implicit tupler : Tupler[prepend.Out]): MatcherExtractor[tupler.Out] = {
 
       new MatcherExtractor[tupler.Out]({ input: String =>
-        newMatcher.apply(input.toList) match {
+        newPattern.apply(input.toList) match {
           case TsMatch(matches, Nil) => Some(matches.tupled(tupler))
           case _                     => None
         }
