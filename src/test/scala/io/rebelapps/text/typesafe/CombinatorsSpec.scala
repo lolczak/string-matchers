@@ -1,5 +1,6 @@
 package io.rebelapps.text.typesafe
 
+import cats.implicits._
 import io.rebelapps.text.typesafe.Patterns._
 import org.scalatest.{FeatureSpec, Matchers => SpecMatchers}
 import shapeless._
@@ -154,6 +155,18 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
         case Pattern(x) => x shouldBe Right("1234" :: HNil)
       }
     }
+  }
+
+  feature("Concatenation feature") {
+
+    val Pattern = con(rep1(txt("ab"))).interpret.it
+
+    scenario("correct string") {
+      "ababab" match {
+        case Pattern(x) => x shouldBe "ababab"
+      }
+    }
+
   }
 
 }

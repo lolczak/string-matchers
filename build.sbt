@@ -18,7 +18,8 @@ lazy val testLibs = Seq(
 )
 
 libraryDependencies ++= Seq(
-    "com.chuusai" %% "shapeless" % "2.3.3"
+  "org.typelevel" %% "cats-core" % catsVersion,
+  "com.chuusai" %% "shapeless" % "2.3.3"
 ) ++ testLibs
 
 lazy val `string-matchers` = project in file(".")

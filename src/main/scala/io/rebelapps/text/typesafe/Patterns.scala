@@ -1,5 +1,6 @@
 package io.rebelapps.text.typesafe
 
+import cats.Monoid
 import shapeless.{::, HList, HNil}
 
 import scala.annotation.tailrec
@@ -75,6 +76,17 @@ object Patterns {
       left(input) match {
         case TsMatch(matches, next) => TsMatch[Either[A, B] :: HNil](Left(matches) :: HNil, next)
         case TsNoMatch(_)           => right(input).mapMatches(m => Right(m) :: HNil)
+      }
+    }
+
+  def con[A](p: Pattern[List[A :: HNil] :: HNil])(implicit M: Monoid[A]): Pattern[A :: HNil] =
+    Pattern { input =>
+      p(input) match {
+        case TsMatch(matches :: HNil, next) =>
+          val concatenated = matches.foldLeft(M.empty) { case (acc, elem :: HNil) => M.combine(acc, elem) }
+          TsMatch[A :: HNil](concatenated :: HNil, next)
+
+        case TsNoMatch(next)        => TsNoMatch[A :: HNil](next)
       }
     }
 
