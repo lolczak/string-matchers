@@ -109,7 +109,9 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
 
     scenario("none") {
       "aa" match {
-        case Pattern(x) => x._1 shouldBe "aa"
+        case Pattern((x, y)) =>
+          x shouldBe "aa"
+          y shouldBe None
       }
     }
   }
