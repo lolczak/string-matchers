@@ -95,4 +95,23 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
 
   }
 
+  feature("Optional matching") {
+
+    val Pattern = txt("aa") ~ opt(txt("bb")) compile
+
+    scenario("some") {
+      "aabb" match {
+        case Pattern((x, y)) =>
+          x shouldBe "aa"
+          y shouldBe Some("bb" :: HNil)
+      }
+    }
+
+    scenario("none") {
+      "aa" match {
+        case Pattern(x) => x._1 shouldBe "aa"
+      }
+    }
+  }
+
 }

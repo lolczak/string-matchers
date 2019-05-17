@@ -62,4 +62,12 @@ object Patterns {
       loop(next)
     }
 
+  def opt[A <: HList](p: Pattern[A]):Pattern[Option[A] :: HNil] =
+    Pattern { next =>
+      p(next) match {
+        case TsNoMatch(_)  => TsMatch[Option[A] :: HNil](None :: HNil, next)
+        case TsMatch(t, n) => TsMatch[Option[A] :: HNil](Some(t) :: HNil, n)
+      }
+    }
+
 }
