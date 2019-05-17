@@ -49,4 +49,17 @@ object Patterns {
       loop(next)
     }
 
+  def rep0[A <: HList](p: Pattern[A]):Pattern[List[A] :: HNil] =
+    Pattern { next =>
+      @tailrec
+      def loop(next: List[Char], acc: List[A] = List.empty): TsMatcherResult[List[A] :: HNil] = {
+        p(next) match {
+          case TsNoMatch(_)  => TsMatch[List[A] :: HNil](acc :: HNil, next)
+          case TsMatch(t, n) => loop(n, acc :+ t)
+        }
+      }
+
+      loop(next)
+    }
+
 }

@@ -27,6 +27,31 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
     }
   }
 
+  feature("0-n repetitions matcher") {
+
+    val Pattern = rep0(txt("ab")).compile
+
+    scenario("correct string") {
+      "ab" match {
+        case Pattern(x) => x._1 shouldBe List("ab" :: HNil)
+      }
+      "" match {
+        case Pattern(x) => x._1 shouldBe List.empty
+      }
+      "ababab" match {
+        case Pattern(x) => x._1 shouldBe List("ab" :: HNil, "ab" :: HNil, "ab" :: HNil)
+      }
+    }
+
+    scenario("incorrect string") {
+      intercept[MatchError] {
+        "aacbb" match {
+          case Pattern(x) => fail()
+        }
+      }
+    }
+  }
+
   feature("Sequential composition") {
 
     val Pattern = txt("aa") ~ txt("bb") compile
