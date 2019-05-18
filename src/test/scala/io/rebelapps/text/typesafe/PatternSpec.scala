@@ -12,7 +12,7 @@ class PatternSpec extends FlatSpec with Matchers {
     case object B
 
     val Pattern: Matcher[(A.type, String)] =
-      (acceptChar(_ == 'a').map((_:String) => A) ~ acceptChar(_ == 'b') <~ acceptChar(_ == 'c')).compile
+      (acceptChar(_ == 'a').map((_:String) => A) ~ acceptChar(_ == 'b') <~ acceptChar(_ == 'c')).asMatcher
 
     "abc" match {
       case Pattern((xx,yy)) =>

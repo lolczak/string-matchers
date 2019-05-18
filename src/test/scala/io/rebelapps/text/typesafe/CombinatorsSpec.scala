@@ -13,7 +13,7 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
 
   feature("At least once repetition") {
 
-    val Pattern = rep1(txt("ab")).compile
+    val Pattern = rep1(txt("ab")).asMatcher
 
     scenario("correct string") {
       "ababab" match {
@@ -32,7 +32,7 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
 
   feature("0-n repetitions matcher") {
 
-    val Pattern = rep0(txt("ab")).compile
+    val Pattern = rep0(txt("ab")).asMatcher
 
     scenario("correct string") {
       "ab" match {
@@ -57,7 +57,7 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
 
   feature("Sequential composition") {
 
-    val Pattern = txt("aa") ~ txt("bb") compile
+    val Pattern = txt("aa") ~ txt("bb") asMatcher
 
     scenario("correct string") {
       "aabb" match {
@@ -79,7 +79,7 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
   feature("Left sequential composition") {
 
     scenario("correct string") {
-      val Pattern = (txt("aa") <~ txt("bb")).compile
+      val Pattern = (txt("aa") <~ txt("bb")).asMatcher
       "aabb" match {
         case Pattern(x) => x._1 shouldBe "aa"
       }
@@ -90,7 +90,7 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
   feature("Right sequential composition") {
 
     scenario("correct string") {
-      val Pattern = (txt("aa") ~> txt("bb")).compile
+      val Pattern = (txt("aa") ~> txt("bb")).asMatcher
       "aabb" match {
         case Pattern(x) => x._1 shouldBe "bb"
       }
@@ -100,7 +100,7 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
 
   feature("Optional matching") {
 
-    val Pattern = txt("aa") ~ opt(txt("bb")) compile
+    val Pattern = txt("aa") ~ opt(txt("bb")) asMatcher
 
     scenario("some") {
       "aabb" match {

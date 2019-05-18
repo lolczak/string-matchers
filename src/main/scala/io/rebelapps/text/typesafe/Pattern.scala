@@ -40,7 +40,7 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
       }
     }
 
-  def compile(implicit tupler: Tupler[A]): Matcher[tupler.Out] =
+  def asMatcher(implicit tupler: Tupler[A]): Matcher[tupler.Out] =
     new Matcher[tupler.Out]({ input: String =>
       apply(input.toList) match {
         case TsMatch(matches, Nil) => Some(matches.tupled(tupler))

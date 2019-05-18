@@ -9,7 +9,7 @@ class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
 
   feature("arbitrary character matcher") {
 
-    val Pattern = acceptChar(_ == 'a').compile
+    val Pattern = acceptChar(_ == 'a').asMatcher
 
     scenario("match") {
       "a" match {
@@ -29,7 +29,7 @@ class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
 
   feature("whitespace matcher") {
 
-    val Pattern = space.compile
+    val Pattern = space.asMatcher
 
     scenario("match") {
       " " match {
@@ -52,7 +52,7 @@ class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
 
   feature("digit matcher") {
 
-    val Pattern = digit.compile
+    val Pattern = digit.asMatcher
 
     scenario("match") {
       "1" match {
@@ -75,7 +75,7 @@ class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
 
   feature("word matcher") {
 
-    val Pattern = word.compile
+    val Pattern = word.asMatcher
 
     scenario("match") {
       "a" match {
@@ -101,7 +101,7 @@ class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
 
   feature("alpha matcher") {
 
-    val Pattern = alpha.compile
+    val Pattern = alpha.asMatcher
 
     scenario("match") {
       "a" match {
@@ -124,7 +124,7 @@ class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
 
   feature("text matcher") {
 
-    val Pattern = txt("abc").compile
+    val Pattern = txt("abc").asMatcher
 
     scenario("match") {
       "abc" match {
@@ -144,7 +144,7 @@ class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
 
   feature("punctuation characters matcher") {
 
-    val Pattern = punct.compile
+    val Pattern = punct.asMatcher
 
     scenario("match") {
       val punct = """][!"#$%&'()*+,./:;<=>?@\^_`{|}~-""".toCharArray.toList
