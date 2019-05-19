@@ -121,7 +121,7 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
 
   feature("Alternative syntax") {
 
-    val Pattern = (txt("aa") ~ opt(txt("bb"))).interpret.it
+    val Pattern = (txt("aa") ~ opt(txt("bb"))).tupled.matcher
 
     scenario("some") {
       "aabb" match {
@@ -142,7 +142,7 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
 
   feature("Alternative matching") {
 
-    val Pattern = alt(txt("abcd"))(txt("1234")).interpret.it
+    val Pattern = alt(txt("abcd"))(txt("1234")).tupled.matcher
 
     scenario("left") {
       "abcd" match {
@@ -159,7 +159,7 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
 
   feature("Concatenation combinator") {
 
-    val Pattern = con(rep1(txt("ab"))).interpret.it
+    val Pattern = con(rep1(txt("ab"))).tupled.matcher
 
     scenario("correct string") {
       "ababab" match {
