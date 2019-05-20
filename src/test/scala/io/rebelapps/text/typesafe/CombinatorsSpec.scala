@@ -119,27 +119,6 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
     }
   }
 
-  feature("Alternative syntax") {
-
-    val Pattern = (txt("aa") ~ opt(txt("bb"))).tupled.matcher
-
-    scenario("some") {
-      "aabb" match {
-        case Pattern(x, y) =>
-          x shouldBe "aa"
-          y shouldBe Some("bb" :: HNil)
-      }
-    }
-
-    scenario("none") {
-      "aa" match {
-        case Pattern(x, y) =>
-          x shouldBe "aa"
-          y shouldBe None
-      }
-    }
-  }
-
   feature("Alternative matching") {
 
     val Pattern = alt(txt("abcd"))(txt("1234")).tupled.matcher
