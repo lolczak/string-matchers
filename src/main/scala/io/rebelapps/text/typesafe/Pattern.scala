@@ -42,12 +42,11 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
 
   def |[B <: HList](right: Pattern[B]): Pattern[Either[A, B] :: HNil] = Patterns.alt(self)(right)
 
-  def unapplySeq(input: String): Option[(A, Seq[Nothing])] = {
+  def unapplySeq(input: String): Option[(A, Seq[Nothing])] =
     self(input.toList) match {
       case TsMatch(terms, Nil) => Some(terms -> Seq.empty)
       case _                   => None
     }
-  }
 
   def asMatcher(implicit tupler: Tupler[A]): Matcher[tupler.Out] =
     new Matcher[tupler.Out]({ input: String =>
