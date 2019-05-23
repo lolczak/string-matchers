@@ -12,7 +12,7 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
     Pattern { input =>
       this.apply(input) match {
         case TsMatch(matches, rest) => TsMatch(f(matches.head) :: HNil, rest)
-        case _ => TsNoMatch[C :: HNil](input)
+        case _                      => TsNoMatch[C :: HNil](input)
       }
     }
 
