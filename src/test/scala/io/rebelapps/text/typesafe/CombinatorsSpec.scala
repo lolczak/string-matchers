@@ -148,10 +148,27 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
 
   }
 
-  feature("guard combinator")
-  {
+  feature("guard combinator") {
 
+    val Pattern = (txt("aa") ~ guard(txt("ab")) ~ con(w.+)).tupled.matcher
+
+    scenario("correct string") {
+      "aaab" match {
+        case Pattern(x, y) =>
+          x shouldBe "aa"
+          y shouldBe "ab"
+      }
+    }
+
+    scenario("incorrect string") {
+      intercept[MatchError] {
+        "aabb" match {
+          case Pattern(x, y) => fail()
+        }
+      }
+    }
   }
+
   feature("range combinator") {
 
   }

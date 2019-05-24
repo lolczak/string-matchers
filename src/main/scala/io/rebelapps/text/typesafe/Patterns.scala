@@ -80,6 +80,14 @@ object Patterns {
       }
     }
 
+  def guard[A <: HList](p: Pattern[A]): Pattern[HNil] =
+    Pattern { input =>
+      p(input) match {
+        case TsNoMatch(_)  => TsNoMatch[HNil](input)
+        case TsMatch(_, _) => TsMatch[HNil](HNil, input)
+      }
+    }
+
   def opt[A <: HList](p: Pattern[A]): Pattern[Option[A] :: HNil] =
     Pattern { input =>
       p(input) match {
