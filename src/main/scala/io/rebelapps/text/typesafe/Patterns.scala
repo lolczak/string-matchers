@@ -9,6 +9,7 @@ object Patterns {
 
   lazy val acceptChar = (f: Char => Boolean) =>
     Pattern[String :: HNil] {
+      case Nil                    => TsNoMatch[String :: HNil](Nil)
       case input if f(input.head) => TsMatch[String :: HNil](input.head.toString :: HNil, input.tail)
       case input                  => TsNoMatch[String :: HNil](input)
     }
@@ -71,10 +72,18 @@ object Patterns {
       loop(next)
     }
 
+  def not[A <: HList](p: Pattern[A]): Pattern[HNil] =
+    Pattern { input =>
+      p(input) match {
+        case TsNoMatch(_)  => TsMatch[HNil](HNil, input)
+        case TsMatch(_, _) => TsNoMatch[HNil](input)
+      }
+    }
+
   def opt[A <: HList](p: Pattern[A]): Pattern[Option[A] :: HNil] =
-    Pattern { next => //todo rename to input
-      p(next) match {
-        case TsNoMatch(_)  => TsMatch[Option[A] :: HNil](None :: HNil, next)
+    Pattern { input =>
+      p(input) match {
+        case TsNoMatch(_)  => TsMatch[Option[A] :: HNil](None :: HNil, input)
         case TsMatch(t, n) => TsMatch[Option[A] :: HNil](Some(t) :: HNil, n)
       }
     }

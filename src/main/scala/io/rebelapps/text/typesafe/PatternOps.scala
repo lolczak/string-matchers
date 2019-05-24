@@ -1,8 +1,8 @@
 package io.rebelapps.text.typesafe
 
-import io.rebelapps.text.typesafe.Patterns.{alt, opt, rep0, rep1}
-import shapeless.{::, HList, HNil}
+import io.rebelapps.text.typesafe.Patterns.alt
 import shapeless.ops.hlist.Prepend
+import shapeless.{::, HList, HNil}
 
 class PatternOps[A <: HList](self: Pattern[A]) {
 
