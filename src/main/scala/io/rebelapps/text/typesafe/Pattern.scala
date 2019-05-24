@@ -19,24 +19,6 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
       }
     }
 
-  def <~[B <: HList](next: Pattern[B]): Pattern[A] =
-    Pattern { input =>
-      this.apply(input) match {
-        case TsMatch(matches, rest) => next(rest) mapMatches[A] (_ => matches)
-        case _                      => TsNoMatch[A](input)
-      }
-    }
-
-  def ~>[B <: HList](next: Pattern[B]): Pattern[B] =
-    Pattern { input =>
-      this.apply(input) match {
-        case TsMatch(_, rest) => next(rest)
-        case _                => TsNoMatch[B](input)
-      }
-    }
-
-  def |[B <: HList](right: Pattern[B]): Pattern[Either[A, B] :: HNil] = alt(self)(right)
-
   lazy val ? = opt(self)
 
   lazy val + = rep1(self)
