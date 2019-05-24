@@ -19,24 +19,24 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
   def ~[B <: HList](next: Pattern[B])(implicit prepend: Prepend[A, B]): Pattern[prepend.Out] =
     Pattern { input =>
       this.apply(input) match {
-        case TsMatch(terms, rest) => next(rest).mapMatches[prepend.Out](suffix => terms.++(suffix)(prepend))
-        case _                    => TsNoMatch[prepend.Out](input)
+        case TsMatch(matches, rest) => next(rest).mapMatches[prepend.Out](suffix => matches.++(suffix)(prepend))
+        case _                      => TsNoMatch[prepend.Out](input)
       }
     }
 
   def <~[B <: HList](next: Pattern[B]): Pattern[A] =
     Pattern { input =>
       this.apply(input) match {
-        case TsMatch(terms, rest) => next(rest) mapMatches[A] (_ => terms)
-        case _                    => TsNoMatch[A](input)
+        case TsMatch(matches, rest) => next(rest) mapMatches[A] (_ => matches)
+        case _                      => TsNoMatch[A](input)
       }
     }
 
   def ~>[B <: HList](next: Pattern[B]): Pattern[B] =
     Pattern { input =>
       this.apply(input) match {
-        case TsMatch(terms, rest) => next(rest)
-        case _                    => TsNoMatch[B](input)
+        case TsMatch(_, rest) => next(rest)
+        case _                => TsNoMatch[B](input)
       }
     }
 
@@ -60,8 +60,8 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
 
     private val newPattern: Pattern[prepend.Out] = Pattern { input =>
       self.apply(input) match {
-        case TsMatch(terms, rest) => TsMatch(terms.:+(Seq.empty)(prepend), rest)
-        case _                    => TsNoMatch[prepend.Out](input)
+        case TsMatch(matches, rest) => TsMatch(matches.:+(Seq.empty)(prepend), rest)
+        case _                      => TsNoMatch[prepend.Out](input)
       }
     }
 
