@@ -32,7 +32,7 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
 
   feature("0-n repetitions matcher") {
 
-    val Pattern = rep0(txt("ab")).asMatcher
+    val Pattern = txt("ab").* asMatcher
 
     scenario("correct string") {
       "ab" match {

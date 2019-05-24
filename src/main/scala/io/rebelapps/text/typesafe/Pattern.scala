@@ -1,6 +1,6 @@
 package io.rebelapps.text.typesafe
 
-import io.rebelapps.text.typesafe.Patterns.{alt, opt, rep1}
+import io.rebelapps.text.typesafe.Patterns.{alt, opt, rep1, rep0}
 import shapeless.ops.hlist.{Prepend, Tupler}
 import shapeless.{::, HList, HNil}
 
@@ -48,6 +48,8 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
   lazy val ? = opt(self)
 
   lazy val + = rep1(self)
+
+  lazy val * = rep0(self)
 
   def unapplySeq(input: String): Option[(A, Seq[Nothing])] =
     self(input.toList) match {
