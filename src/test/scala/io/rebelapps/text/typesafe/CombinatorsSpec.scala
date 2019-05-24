@@ -13,7 +13,7 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
 
   feature("At least once repetition") {
 
-    val Pattern = rep1(txt("ab")).asMatcher
+    val Pattern = txt("ab").+ asMatcher
 
     scenario("correct string") {
       "ababab" match {

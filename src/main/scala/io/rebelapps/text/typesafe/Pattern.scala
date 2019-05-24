@@ -44,6 +44,8 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
 
   lazy val ? = Patterns.opt(self)
 
+  lazy val + = Patterns.rep1(self)
+
   def unapplySeq(input: String): Option[(A, Seq[Nothing])] =
     self(input.toList) match {
       case TsMatch(matches, Nil) => Some(matches -> Seq.empty)
