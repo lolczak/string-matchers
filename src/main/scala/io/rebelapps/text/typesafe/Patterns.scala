@@ -17,11 +17,19 @@ object Patterns {
 
   lazy val space = acceptChar(_.isWhitespace)
 
+  lazy val s = space
+
   lazy val digit = acceptChar(_.isDigit)
+
+  lazy val d = digit
 
   lazy val word = acceptChar(ch => ch.isLetterOrDigit || ch == '_')
 
+  lazy val w = word
+
   lazy val alpha = acceptChar(_.isLetter)
+
+  lazy val a = alpha
 
   lazy val txt = (const: String) =>
     Pattern { input =>

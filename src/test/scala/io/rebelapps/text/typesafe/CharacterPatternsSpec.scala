@@ -29,7 +29,7 @@ class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
 
   feature("whitespace matcher") {
 
-    val Pattern = space.asMatcher
+    val Pattern = s.asMatcher
 
     scenario("match") {
       " " match {
@@ -52,7 +52,7 @@ class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
 
   feature("digit matcher") {
 
-    val Pattern = digit.asMatcher
+    val Pattern = d.asMatcher
 
     scenario("match") {
       "1" match {
@@ -75,7 +75,7 @@ class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
 
   feature("word matcher") {
 
-    val Pattern = word.asMatcher
+    val Pattern = w.asMatcher
 
     scenario("match") {
       "a" match {

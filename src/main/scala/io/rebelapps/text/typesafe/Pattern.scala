@@ -1,6 +1,6 @@
 package io.rebelapps.text.typesafe
 
-import io.rebelapps.text.typesafe.Patterns.{alt, opt, rep1, rep0}
+import io.rebelapps.text.typesafe.Patterns.{alt, opt, rep0, rep1}
 import shapeless.ops.hlist.{Prepend, Tupler}
 import shapeless.{::, HList, HNil}
 
