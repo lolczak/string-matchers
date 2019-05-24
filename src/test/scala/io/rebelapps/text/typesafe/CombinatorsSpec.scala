@@ -100,7 +100,7 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
 
   feature("Optional matching") {
 
-    val Pattern = txt("aa") ~ opt(txt("bb")) asMatcher
+    val Pattern = txt("aa") ~ txt("bb").? asMatcher
 
     scenario("some") {
       "aabb" match {

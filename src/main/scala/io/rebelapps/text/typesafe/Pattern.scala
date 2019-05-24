@@ -42,6 +42,8 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
 
   def |[B <: HList](right: Pattern[B]): Pattern[Either[A, B] :: HNil] = Patterns.alt(self)(right)
 
+  lazy val ? = Patterns.opt(self)
+
   def unapplySeq(input: String): Option[(A, Seq[Nothing])] =
     self(input.toList) match {
       case TsMatch(matches, Nil) => Some(matches -> Seq.empty)
