@@ -19,14 +19,6 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
       }
     }
 
-  def ~[B <: HList](next: Pattern[B])(implicit prepend: Prepend[A, B]): Pattern[prepend.Out] =
-    Pattern { input =>
-      this.apply(input) match {
-        case TsMatch(matches, rest) => next(rest).mapMatches[prepend.Out](suffix => matches.++(suffix)(prepend))
-        case _                      => TsNoMatch[prepend.Out](input)
-      }
-    }
-
   def <~[B <: HList](next: Pattern[B]): Pattern[A] =
     Pattern { input =>
       this.apply(input) match {
@@ -104,5 +96,7 @@ object Pattern {
 
   def apply[A <: HList](f: List[Char] => TsMatcherResult[A]): Pattern[A] =
     new Pattern[A] { def apply(input: List[Char]): TsMatcherResult[A] = f(input) }
+
+  implicit def patternOps[A <: HList](p: Pattern[A]): PatternOps[A] = new PatternOps[A](p)
 
 }
