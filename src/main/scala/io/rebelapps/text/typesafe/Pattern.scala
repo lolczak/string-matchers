@@ -9,6 +9,8 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
 
   override def apply(input: List[Char]): TsMatcherResult[A]
 
+  def ^^[B, C](f: B => C)(implicit ev: A <:< (B :: HNil)): Pattern[C :: HNil] = map(f)
+
   def map[B, C](f: B => C)(implicit ev: A <:< (B :: HNil)): Pattern[C :: HNil] =
     Pattern { input =>
       this.apply(input) match {

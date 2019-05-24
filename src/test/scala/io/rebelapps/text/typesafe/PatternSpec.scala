@@ -55,7 +55,7 @@ class PatternSpec extends FeatureSpec with SpecMatchers {
 
   feature("Mapping over function") {
 
-    val Pattern = (txt("aa").map((_: String).length) ~ opt(txt("bb"))).tupled.matcher
+    val Pattern = (txt("aa").^^((_: String).length) ~ opt(txt("bb"))).tupled.matcher
 
     scenario("text mapping") {
       "aabb" match {
