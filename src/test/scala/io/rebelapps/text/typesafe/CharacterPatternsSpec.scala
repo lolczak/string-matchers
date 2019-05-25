@@ -1,7 +1,10 @@
 package io.rebelapps.text.typesafe
 
+import cats.implicits._
 import io.rebelapps.text.typesafe.Patterns._
 import org.scalatest.{FeatureSpec, Matchers => SpecMatchers}
+
+import scala.language.reflectiveCalls
 
 class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
 
@@ -159,6 +162,27 @@ class CharacterPatternsSpec extends FeatureSpec with SpecMatchers {
     scenario("no match") {
       intercept[MatchError] {
         "1" match {
+          case Pattern(x) => fail()
+        }
+      }
+    }
+
+  }
+
+  feature("End of sequence matcher") {
+
+    val Pattern = (con(alpha.+) ~ eos).tupled.matcher
+
+    scenario("match") {
+
+      "abcd" match {
+        case Pattern(x) => x shouldBe "abcd"
+      }
+    }
+
+    scenario("no match") {
+      intercept[MatchError] {
+        "abcd1" match {
           case Pattern(x) => fail()
         }
       }

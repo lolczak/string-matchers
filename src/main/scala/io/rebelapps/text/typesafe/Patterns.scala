@@ -47,6 +47,12 @@ object Patterns {
 
   def range(min: Char, max: Char) = acceptChar(ch => ch >= min && ch <= max)
 
+  lazy val eos: Pattern[HNil] =
+    Pattern { input =>
+      if (input.isEmpty) TsMatch[HNil](HNil, input)
+      else TsNoMatch[HNil](input)
+    }
+
   def rep1[A <: HList](p: Pattern[A]):Pattern[List[A] :: HNil] =
     Pattern { next =>
       @tailrec
