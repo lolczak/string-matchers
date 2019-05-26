@@ -11,6 +11,8 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
 
   def ^^[B, C](f: B => C)(implicit ev: A <:< (B :: HNil)): Pattern[C :: HNil] = map(f)
 
+  def ^^^ [B, C](result: => C)(implicit ev: A <:< (B :: HNil)): Pattern[C :: HNil] = map[B, C](_ => result)
+
   def map[B, C](f: B => C)(implicit ev: A <:< (B :: HNil)): Pattern[C :: HNil] =
     Pattern { input =>
       this.apply(input) match {

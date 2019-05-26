@@ -65,6 +65,19 @@ class PatternSpec extends FeatureSpec with SpecMatchers {
       }
     }
 
+  }
+
+  feature("change of a successful result into the specified value.") {
+
+    val Pattern = ((txt("aa") ^^^ 1) ~ opt(txt("bb"))).tupled.matcher
+
+    scenario("text mapping") {
+      "aabb" match {
+        case Pattern(x, y) =>
+          x shouldBe 1
+          y shouldBe Some("bb" :: HNil)
+      }
+    }
 
   }
 
