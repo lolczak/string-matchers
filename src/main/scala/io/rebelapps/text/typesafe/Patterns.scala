@@ -124,6 +124,8 @@ object Patterns {
       }
     }
 
+  def <+>[A](p: Pattern[List[A :: HNil] :: HNil])(implicit M: Monoid[A]): Pattern[A :: HNil] = con(p)
+
   def con[A](p: Pattern[List[A :: HNil] :: HNil])(implicit M: Monoid[A]): Pattern[A :: HNil] =
     Pattern { input =>
       p(input) match {
