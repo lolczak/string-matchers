@@ -67,7 +67,7 @@ object Patterns {
       loop(next)
     }
 
-  def rep0[A <: HList](p: Pattern[A]):Pattern[List[A] :: HNil] =
+  def rep0[A <: HList](p: Pattern[A]): Pattern[List[A] :: HNil] =
     Pattern { next =>
       @tailrec
       def loop(next: List[Char], acc: List[A] = List.empty): TsMatcherResult[List[A] :: HNil] = {
@@ -79,6 +79,18 @@ object Patterns {
 
       loop(next)
     }
+
+  //    end ^^^ List.empty | (p ~ repTill(p, end)) ^^ { case x ~ xs => x :: xs }
+  def repTill[A <: HList, B <: HList](p: Pattern[A], q: Pattern[B]): Pattern[List[A] :: HNil]  =  {
+    val end = guard(q) <> (_ => List.empty[A] :: HNil)
+    val head = p <> (hlist => List(hlist) :: HNil)
+    lazy val rec = (head ~ repTill(p, q)) <> { case h :: t :: HNil => (h ++ t) :: HNil}
+
+    (end | rec) <> {
+      case Left(r) :: HNil  => r
+      case Right(r) :: HNil => r
+    }
+  }
 
   def not[A <: HList](p: Pattern[A]): Pattern[HNil] =
     Pattern { input =>
@@ -104,7 +116,7 @@ object Patterns {
       }
     }
 
-  def alt[A <: HList, B <: HList](left: Pattern[A])(right: Pattern[B]): Pattern[Either[A, B] :: HNil] =
+  def alt[A <: HList, B <: HList](left: => Pattern[A])(right: => Pattern[B]): Pattern[Either[A, B] :: HNil] =
     Pattern { input =>
       left(input) match {
         case TsMatch(matches, next) => TsMatch[Either[A, B] :: HNil](Left(matches) :: HNil, next)

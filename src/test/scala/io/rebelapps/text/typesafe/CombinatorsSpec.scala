@@ -30,6 +30,27 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
     }
   }
 
+  feature("Repetition till some pattern") {
+
+    val Pattern = (con(repTill(w, txt("a"))) ~ con(w.+)).tupled.matcher
+
+    scenario("correct string") {
+      "cdwrtabc" match {
+        case Pattern(x, y) =>
+          x shouldBe "cdwrt"
+          y shouldBe "abc"
+      }
+    }
+
+    scenario("incorrect string") {
+      intercept[MatchError] {
+        "cdwrt" match {
+          case Pattern(x, y) => fail()
+        }
+      }
+    }
+  }
+
   feature("0-n repetitions matcher") {
 
     val Pattern = txt("ab").* asMatcher

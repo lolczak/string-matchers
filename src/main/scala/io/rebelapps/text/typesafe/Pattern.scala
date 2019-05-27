@@ -1,6 +1,6 @@
 package io.rebelapps.text.typesafe
 
-import io.rebelapps.text.typesafe.Patterns.{alt, opt, rep0, rep1}
+import io.rebelapps.text.typesafe.Patterns.{opt, rep0, rep1}
 import shapeless.ops.hlist.{Prepend, Tupler}
 import shapeless.{::, HList, HNil}
 
@@ -9,15 +9,25 @@ abstract class Pattern[A <: HList] extends (List[Char] => TsMatcherResult[A]) {
 
   override def apply(input: List[Char]): TsMatcherResult[A]
 
-  def ^^[B, C](f: B => C)(implicit ev: A <:< (B :: HNil)): Pattern[C :: HNil] = map(f)
+  def ^^[B, C](f: B => C)(implicit ev: A <:< (B :: HNil)): Pattern[C :: HNil] = mapSingle(f)
 
-  def ^^^ [B, C](result: => C)(implicit ev: A <:< (B :: HNil)): Pattern[C :: HNil] = map[B, C](_ => result)
+  def ^^^[B, C](result: => C)(implicit ev: A <:< (B :: HNil)): Pattern[C :: HNil] = mapSingle[B, C](_ => result)
 
-  def map[B, C](f: B => C)(implicit ev: A <:< (B :: HNil)): Pattern[C :: HNil] =
+  def mapSingle[B, C](f: B => C)(implicit ev: A <:< (B :: HNil)): Pattern[C :: HNil] =
     Pattern { input =>
       this.apply(input) match {
         case TsMatch(matches, rest) => TsMatch(f(matches.head) :: HNil, rest)
         case _                      => TsNoMatch[C :: HNil](input)
+      }
+    }
+
+  def <>[B <: HList](f: A => B): Pattern[B] = map(f)
+
+  def map[B <: HList](f: A => B): Pattern[B] =
+    Pattern { input =>
+      this.apply(input) match {
+        case TsMatch(matches, rest) => TsMatch(f(matches), rest)
+        case _                      => TsNoMatch[B](input)
       }
     }
 

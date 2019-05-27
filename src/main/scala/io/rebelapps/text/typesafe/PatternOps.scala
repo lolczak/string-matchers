@@ -31,6 +31,6 @@ class PatternOps[A <: HList](self: Pattern[A]) {
       }
     }
 
-  def |[B <: HList](right: Pattern[B]): Pattern[Either[A, B] :: HNil] = alt(self)(right)
+  def |[B <: HList](right: => Pattern[B]): Pattern[Either[A, B] :: HNil] = alt(self)(right)
 
 }
