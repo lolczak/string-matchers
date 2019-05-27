@@ -9,9 +9,9 @@ object Patterns {
 
   lazy val acceptChar = (f: Char => Boolean) =>
     Pattern[String :: HNil] {
-      case Nil                    => TsNoMatch[String :: HNil](Nil)
-      case input if f(input.head) => TsMatch[String :: HNil](input.head.toString :: HNil, input.tail)
-      case input                  => TsNoMatch[String :: HNil](input)
+      case Nil                    => NoMatch[String :: HNil](Nil)
+      case input if f(input.head) => Match[String :: HNil](input.head.toString :: HNil, input.tail)
+      case input                  => NoMatch[String :: HNil](input)
     }
 
   lazy val ch = (ch: Char) => acceptChar(_ == ch)
@@ -35,9 +35,9 @@ object Patterns {
   lazy val txt = (const: String) =>
     Pattern { input =>
       if (input.startsWith(const.toSeq)) {
-        TsMatch[String :: HNil](const :: HNil, input.drop(const.length))
+        Match[String :: HNil](const :: HNil, input.drop(const.length))
       } else {
-        TsNoMatch[String :: HNil](input)
+        NoMatch[String :: HNil](input)
       }
     }
 
@@ -49,18 +49,18 @@ object Patterns {
 
   lazy val eos: Pattern[HNil] =
     Pattern { input =>
-      if (input.isEmpty) TsMatch[HNil](HNil, input)
-      else TsNoMatch[HNil](input)
+      if (input.isEmpty) Match[HNil](HNil, input)
+      else NoMatch[HNil](input)
     }
 
   def rep1[A <: HList](p: Pattern[A]):Pattern[List[A] :: HNil] =
     Pattern { next =>
       @tailrec
-      def loop(next: List[Char], acc: List[A] = List.empty): TsMatcherResult[List[A] :: HNil] = {
+      def loop(next: List[Char], acc: List[A] = List.empty): MatcherResult[List[A] :: HNil] = {
         p(next) match {
-          case TsNoMatch(_) if acc.isEmpty  => TsNoMatch[List[A] :: HNil](next)
-          case TsNoMatch(_) if acc.nonEmpty => TsMatch[List[A] :: HNil](acc :: HNil, next)
-          case TsMatch(t, n)                => loop(n, acc :+ t)
+          case NoMatch(_) if acc.isEmpty  => NoMatch[List[A] :: HNil](next)
+          case NoMatch(_) if acc.nonEmpty => Match[List[A] :: HNil](acc :: HNil, next)
+          case Match(t, n)                => loop(n, acc :+ t)
         }
       }
 
@@ -70,10 +70,10 @@ object Patterns {
   def rep0[A <: HList](p: Pattern[A]): Pattern[List[A] :: HNil] =
     Pattern { next =>
       @tailrec
-      def loop(next: List[Char], acc: List[A] = List.empty): TsMatcherResult[List[A] :: HNil] = {
+      def loop(next: List[Char], acc: List[A] = List.empty): MatcherResult[List[A] :: HNil] = {
         p(next) match {
-          case TsNoMatch(_)  => TsMatch[List[A] :: HNil](acc :: HNil, next)
-          case TsMatch(t, n) => loop(n, acc :+ t)
+          case NoMatch(_)  => Match[List[A] :: HNil](acc :: HNil, next)
+          case Match(t, n) => loop(n, acc :+ t)
         }
       }
 
@@ -95,32 +95,32 @@ object Patterns {
   def not[A <: HList](p: Pattern[A]): Pattern[HNil] =
     Pattern { input =>
       p(input) match {
-        case TsNoMatch(_)  => TsMatch[HNil](HNil, input)
-        case TsMatch(_, _) => TsNoMatch[HNil](input)
+        case NoMatch(_)  => Match[HNil](HNil, input)
+        case Match(_, _) => NoMatch[HNil](input)
       }
     }
 
   def guard[A <: HList](p: Pattern[A]): Pattern[HNil] =
     Pattern { input =>
       p(input) match {
-        case TsNoMatch(_)  => TsNoMatch[HNil](input)
-        case TsMatch(_, _) => TsMatch[HNil](HNil, input)
+        case NoMatch(_)  => NoMatch[HNil](input)
+        case Match(_, _) => Match[HNil](HNil, input)
       }
     }
 
   def opt[A <: HList](p: Pattern[A]): Pattern[Option[A] :: HNil] =
     Pattern { input =>
       p(input) match {
-        case TsNoMatch(_)  => TsMatch[Option[A] :: HNil](None :: HNil, input)
-        case TsMatch(t, n) => TsMatch[Option[A] :: HNil](Some(t) :: HNil, n)
+        case NoMatch(_)  => Match[Option[A] :: HNil](None :: HNil, input)
+        case Match(t, n) => Match[Option[A] :: HNil](Some(t) :: HNil, n)
       }
     }
 
   def alt[A <: HList, B <: HList](left: => Pattern[A])(right: => Pattern[B]): Pattern[Either[A, B] :: HNil] =
     Pattern { input =>
       left(input) match {
-        case TsMatch(matches, next) => TsMatch[Either[A, B] :: HNil](Left(matches) :: HNil, next)
-        case TsNoMatch(_)           => right(input).mapMatches(m => Right(m) :: HNil)
+        case Match(matches, next) => Match[Either[A, B] :: HNil](Left(matches) :: HNil, next)
+        case NoMatch(_)           => right(input).mapMatches(m => Right(m) :: HNil)
       }
     }
 
@@ -129,11 +129,11 @@ object Patterns {
   def con[A](p: Pattern[List[A :: HNil] :: HNil])(implicit M: Monoid[A]): Pattern[A :: HNil] =
     Pattern { input =>
       p(input) match {
-        case TsMatch(matches :: HNil, next) =>
+        case Match(matches :: HNil, next) =>
           val concatenated = matches.foldLeft(M.empty) { case (acc, elem :: HNil) => M.combine(acc, elem) }
-          TsMatch[A :: HNil](concatenated :: HNil, next)
+          Match[A :: HNil](concatenated :: HNil, next)
 
-        case TsNoMatch(next)        => TsNoMatch[A :: HNil](next)
+        case NoMatch(next)        => NoMatch[A :: HNil](next)
       }
     }
 
