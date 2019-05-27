@@ -1,6 +1,6 @@
-package io.rebelapps.text.typesafe
+package io.rebelapps.text
 
-import io.rebelapps.text.typesafe.Patterns.alt
+import io.rebelapps.text.Patterns.alt
 import shapeless.ops.hlist.Prepend
 import shapeless.{::, HList, HNil}
 

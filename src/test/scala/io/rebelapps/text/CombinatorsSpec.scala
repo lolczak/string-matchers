@@ -1,7 +1,7 @@
-package io.rebelapps.text.typesafe
+package io.rebelapps.text
 
 import cats.implicits._
-import io.rebelapps.text.typesafe.Patterns._
+import io.rebelapps.text.Patterns._
 import org.scalatest.{FeatureSpec, Matchers => SpecMatchers}
 import shapeless._
 

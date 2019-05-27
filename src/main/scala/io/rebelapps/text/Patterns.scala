@@ -1,4 +1,4 @@
-package io.rebelapps.text.typesafe
+package io.rebelapps.text
 
 import cats.Monoid
 import shapeless.{::, HList, HNil}

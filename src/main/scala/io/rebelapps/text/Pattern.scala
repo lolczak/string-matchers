@@ -1,6 +1,7 @@
-package io.rebelapps.text.typesafe
+package io.rebelapps.text
 
-import io.rebelapps.text.typesafe.Patterns.{opt, rep0, rep1}
+import io.rebelapps.text
+import io.rebelapps.text.Patterns.{opt, rep0, rep1}
 import shapeless.ops.hlist.{Prepend, Tupler}
 import shapeless.{::, HList, HNil}
 
@@ -53,7 +54,7 @@ abstract class Pattern[A <: HList] extends (List[Char] => MatcherResult[A]) {
 
   def tupled(implicit prepend: Prepend[A, Seq[Nothing] :: HNil]) = new {
 
-    private val newPattern: Pattern[prepend.Out] = Pattern { input =>
+    private val newPattern: Pattern[prepend.Out] = text.Pattern { input =>
       self.apply(input) match {
         case Match(matches, rest)  => Match(matches.:+(Seq.empty)(prepend), rest)
         case _                     => NoMatch[prepend.Out](input)

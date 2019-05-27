@@ -1,4 +1,4 @@
-package io.rebelapps.text.typesafe
+package io.rebelapps.text
 
 import shapeless.HList
 
