@@ -20,6 +20,8 @@ object Patterns {
 
   lazy val s = space
 
+  lazy val ws = space.*
+
   lazy val digit = acceptChar(_.isDigit)
 
   lazy val d = digit
@@ -80,7 +82,6 @@ object Patterns {
       loop(next)
     }
 
-  //    end ^^^ List.empty | (p ~ repTill(p, end)) ^^ { case x ~ xs => x :: xs }
   def repTill[A <: HList, B <: HList](p: Pattern[A], q: Pattern[B]): Pattern[List[A] :: HNil]  =  {
     val end = guard(q) <> (_ => List.empty[A] :: HNil)
     val head = p <> (hlist => List(hlist) :: HNil)
