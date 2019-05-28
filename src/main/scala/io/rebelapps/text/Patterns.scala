@@ -15,6 +15,8 @@ object Patterns {
       case input                  => NoMatch[String :: HNil](input)
     }
 
+  lazy val any = acceptChar(_ => true)
+
   lazy val num = con(d.+) ^^ ((_: String).toInt)
 
   lazy val ch = (ch: Char) => acceptChar(_ == ch)
