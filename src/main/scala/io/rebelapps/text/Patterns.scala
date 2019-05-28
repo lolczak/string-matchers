@@ -1,6 +1,7 @@
 package io.rebelapps.text
 
 import cats.Monoid
+import cats.implicits._
 import shapeless.{::, HList, HNil}
 
 import scala.annotation.tailrec
@@ -13,6 +14,8 @@ object Patterns {
       case input if f(input.head) => Match[String :: HNil](input.head.toString :: HNil, input.tail)
       case input                  => NoMatch[String :: HNil](input)
     }
+
+  lazy val num = con(d.+) ^^ ((_: String).toInt)
 
   lazy val ch = (ch: Char) => acceptChar(_ == ch)
 
