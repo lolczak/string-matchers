@@ -1,6 +1,7 @@
 package io.rebelapps.text
 
-import io.rebelapps.text.Patterns.alt
+import cats.Monoid
+import io.rebelapps.text.Patterns.{alt, con}
 import shapeless.ops.hlist.Prepend
 import shapeless.{::, HList, HNil}
 
@@ -32,5 +33,8 @@ class PatternOps[A <: HList](self: Pattern[A]) {
     }
 
   def |[B <: HList](right: => Pattern[B]): Pattern[Either[A, B] :: HNil] = alt(self)(right)
+
+  def <+>[B](implicit ev: A <:< (List[B :: HNil] :: HNil), M: Monoid[B]): Pattern[B :: HNil] =
+    con[B](self.asInstanceOf[Pattern[List[B :: HNil] :: HNil]])
 
 }
