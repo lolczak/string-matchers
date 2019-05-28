@@ -18,7 +18,7 @@ abstract class Pattern[A <: HList] extends (List[Char] => MatcherResult[A]) {
     Pattern { input =>
       this.apply(input) match {
         case Match(matches, rest) => Match(f(matches.head) :: HNil, rest)
-        case _                      => NoMatch[C :: HNil](input)
+        case _                    => NoMatch[C :: HNil](input)
       }
     }
 

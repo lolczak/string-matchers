@@ -157,6 +157,23 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
     }
   }
 
+  feature("Alternative matching of conformant types") {
+
+    val Pattern = (txt("abcd") || txt("1234")).tupled.matcher
+
+    scenario("left") {
+      "abcd" match {
+        case Pattern(x) => x shouldBe "abcd" :: HNil
+      }
+    }
+
+    scenario("right") {
+      "1234" match {
+        case Pattern(x) => x shouldBe "1234" :: HNil
+      }
+    }
+  }
+
   feature("Concatenation combinator") {
 
     val Pattern = con(rep1(txt("ab"))).tupled.matcher

@@ -98,6 +98,13 @@ object Patterns {
     }
   }
 
+  //todo rep with delimiter
+  //todo rep with min/max
+
+  //todo implicits string char
+
+  //todo upper, lower case
+
   def not[A <: HList](p: Pattern[A]): Pattern[HNil] =
     Pattern { input =>
       p(input) match {
@@ -129,6 +136,9 @@ object Patterns {
         case NoMatch(_)           => right(input).mapMatches(m => Right(m) :: HNil)
       }
     }
+
+  def altConformant[A <: HList](left: => Pattern[A])(right: => Pattern[A]): Pattern[A :: HNil] =
+    alt[A, A](left)(right).mapSingle[Either[A, A], A](_.fold(identity, identity))
 
   def con[A](p: Pattern[List[A :: HNil] :: HNil])(implicit M: Monoid[A]): Pattern[A :: HNil] =
     Pattern { input =>
