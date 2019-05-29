@@ -36,6 +36,9 @@ class PatternOps[A <: HList](self: Pattern[A]) {
 
   def ||(right: => Pattern[A]): Pattern[A :: HNil] = altConformant(self)(right)
 
+  def or[B](right: => Pattern[B :: HNil])(implicit ev: A <:< (B :: HNil)): Pattern[B :: HNil] =
+    altConformantSingle[B](self.asInstanceOf[Pattern[B :: HNil]])(right)
+
   def <+>[B](implicit ev: A <:< (List[B :: HNil] :: HNil), M: Monoid[B]): Pattern[B :: HNil] =
     con[B](self.asInstanceOf[Pattern[List[B :: HNil] :: HNil]])
 

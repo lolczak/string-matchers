@@ -140,6 +140,10 @@ object Patterns {
   def altConformant[A <: HList](left: => Pattern[A])(right: => Pattern[A]): Pattern[A :: HNil] =
     alt[A, A](left)(right).mapSingle[Either[A, A], A](_.fold(identity, identity))
 
+  def altConformantSingle[A](left: => Pattern[A :: HNil])(right: => Pattern[A :: HNil]): Pattern[A :: HNil] =
+    alt[A :: HNil, A :: HNil](left)(right)
+      .mapSingle[Either[A :: HNil, A :: HNil], A](_.fold({ case el :: HNil => el }, { case el :: HNil => el }))
+
   def con[A](p: Pattern[List[A :: HNil] :: HNil])(implicit M: Monoid[A]): Pattern[A :: HNil] =
     Pattern { input =>
       p(input) match {
