@@ -174,7 +174,7 @@ class CombinatorsSpec extends FeatureSpec with SpecMatchers {
     }
   }
 
-  feature("Alternative matching of conformant single types") {
+  feature("Alternative matching of conformant single element hlists") {
 
     val Pattern = (txt("abcd") or txt("1234")).tupled.matcher
 
