@@ -41,7 +41,7 @@ abstract class Pattern[A <: HList] extends (List[Char] => MatcherResult[A]) {
   def unapplySeq(input: String): Option[(A, Seq[Nothing])] =
     self(input.toList) match {
       case Match(matches, Nil) => Some(matches -> Seq.empty)
-      case _                     => None
+      case _                   => None
     }
 
   def asMatcher(implicit tupler: Tupler[A]): Matcher[tupler.Out] =

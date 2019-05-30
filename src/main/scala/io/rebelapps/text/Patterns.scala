@@ -19,6 +19,8 @@ object Patterns {
 
   lazy val num = con(d.+) ^^ ((_: String).toInt)
 
+  lazy val bigNum = con(d.+) ^^ ((_: String).toLong)
+
   lazy val ch = (ch: Char) => acceptChar(_ == ch)
 
   lazy val space = acceptChar(_.isWhitespace)
