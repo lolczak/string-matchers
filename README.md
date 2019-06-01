@@ -41,9 +41,6 @@ portPattern: io.rebelapps.text.Pattern[String :: shapeless.HNil] = <function1>
 scala> val descriptionPattern = con(any.+) ^^ ((_: String).trim)
 descriptionPattern: io.rebelapps.text.Pattern[String :: shapeless.HNil] = <function1>
 
-scala> val PortPattern = (opt(servicePattern) ~ portPattern ~ opt(descriptionPattern)).tupled.matcher
-PortPattern: io.rebelapps.text.MatcherExtractor[(Option[String :: shapeless.HNil], String, Option[String :: shapeless.HNil], Seq[Nothing])] = io.rebelapps.text.MatcherExtractor@65a700e9
-
 scala> val PortPattern = (servicePattern ~ portPattern ~ descriptionPattern).tupled.matcher
 PortPattern: io.rebelapps.text.MatcherExtractor[(String, String, String, Seq[Nothing])] = io.rebelapps.text.MatcherExtractor@41c380e1
 
