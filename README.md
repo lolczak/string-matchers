@@ -32,7 +32,7 @@ import shapeless._
 scala> val servicePattern = con(rep1(acceptChar(!_.isWhitespace))) <~ ws
 servicePattern: io.rebelapps.text.Pattern[String :: shapeless.HNil] = <function1>
 
-scala> val portWithProtocol = con(d.+) ~ (txt("/tcp") or txt("/udp") or txt("/sctp") or txt("dccp")) <> { case port :: proto :: HNil => (port + proto) :: HNil }
+scala> val portWithProtocol = con(d.+) ~ (txt("/tcp") or txt("/udp")) <> { case port :: proto :: HNil => (port + proto) :: HNil }
 portWithProtocol: io.rebelapps.text.Pattern[String :: shapeless.HNil] = <function1>
 
 scala> val portPattern = ws ~> (portWithProtocol or con(d.+)) <~ ws
@@ -49,12 +49,12 @@ PortPattern: io.rebelapps.text.MatcherExtractor[(String, String, String, Seq[Not
 
 scala> "ssh              22/tcp    The Secure Shell (SSH) Protocol" match {
      |   case PortPattern(service, port, description) =>
-     |     println("Service is:" + service)
-     |     println("Port is:" + port)
-     |     println("Description:" + description)
+     |     println("Service is: " + service)
+     |     println("Port is: " + port)
+     |     println("Description: " + description)
      | }
-Service is:ssh
-Port is:22/tcp
-Description:The Secure Shell (SSH) Protocol
+Service is: ssh
+Port is: 22/tcp
+Description: The Secure Shell (SSH) Protocol
 
 ```
