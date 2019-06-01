@@ -21,3 +21,40 @@ scala> "2019-09-10" match {
 Year:2019 month:9 day:10
 
 ```
+
+```
+scala> import cats.implicits._, io.rebelapps.text.Patterns._,  scala.language.reflectiveCalls, shapeless._
+import cats.implicits._
+import io.rebelapps.text.Patterns._
+import scala.language.reflectiveCalls
+import shapeless._
+
+scala> val servicePattern = con(rep1(acceptChar(!_.isWhitespace))) <~ ws
+servicePattern: io.rebelapps.text.Pattern[String :: shapeless.HNil] = <function1>
+
+scala> val portWithProtocol = con(d.+) ~ (txt("/tcp") or txt("/udp") or txt("/sctp") or txt("dccp")) <> { case port :: proto :: HNil => (port + proto) :: HNil }
+portWithProtocol: io.rebelapps.text.Pattern[String :: shapeless.HNil] = <function1>
+
+scala> val portPattern = ws ~> (portWithProtocol or con(d.+)) <~ ws
+portPattern: io.rebelapps.text.Pattern[String :: shapeless.HNil] = <function1>
+
+scala> val descriptionPattern = con(any.+) ^^ ((_: String).trim)
+descriptionPattern: io.rebelapps.text.Pattern[String :: shapeless.HNil] = <function1>
+
+scala> val PortPattern = (opt(servicePattern) ~ portPattern ~ opt(descriptionPattern)).tupled.matcher
+PortPattern: io.rebelapps.text.MatcherExtractor[(Option[String :: shapeless.HNil], String, Option[String :: shapeless.HNil], Seq[Nothing])] = io.rebelapps.text.MatcherExtractor@65a700e9
+
+scala> val PortPattern = (servicePattern ~ portPattern ~ descriptionPattern).tupled.matcher
+PortPattern: io.rebelapps.text.MatcherExtractor[(String, String, String, Seq[Nothing])] = io.rebelapps.text.MatcherExtractor@41c380e1
+
+scala> "ssh              22/tcp    The Secure Shell (SSH) Protocol" match {
+     |   case PortPattern(service, port, description) =>
+     |     println("Service is:" + service)
+     |     println("Port is:" + port)
+     |     println("Description:" + description)
+     | }
+Service is:ssh
+Port is:22/tcp
+Description:The Secure Shell (SSH) Protocol
+
+```
