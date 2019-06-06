@@ -24,10 +24,13 @@ b) email matcher
 ```
 scala> import cats.implicits._, io.rebelapps.text.Patterns._,  scala.language.reflectiveCalls, shapeless._
 
-scala> val Pattern = (con(repTill(any, ch('@'))) ~ (ch('@') ~> con(any.+))).tupled.matcher
-Pattern: io.rebelapps.text.MatcherExtractor[(String, String, Seq[Nothing])] = io.rebelapps.text.MatcherExtractor@50f1fd5
+scala> val Pattern = (w.+.<+> ~ ch('@') ~ any.+.<+>).tupled.matcher
+Pattern: io.rebelapps.text.MatcherExtractor[(String, String, String, Seq[Nothing])] = io.rebelapps.text.MatcherExtractor@1976b6b6
 
-scala> "hello@example.com" match { case Pattern(username, domain) => println(s"Username: $username, domain: $domain") }
+scala> "hello@example.com" match {
+     |   case Pattern(username, _, domain) => println(s"Username: $username, domain: $domain")
+     | }
 Username: hello, domain: example.com
+
 
 ```
