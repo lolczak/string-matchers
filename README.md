@@ -6,6 +6,8 @@
 
 **2. Examples**
 
+a) date matcher
+
 ```
 scala> import cats.implicits._, io.rebelapps.text.Patterns._,  scala.language.reflectiveCalls
 
@@ -16,6 +18,8 @@ scala> "2019-09-10" match { case Pattern(year ::  month ::  day :: HNil) => prin
 Year:2019 month:9 day:10
 
 ```
+
+b) email matcher
 
 ```
 scala> import cats.implicits._, io.rebelapps.text.Patterns._,  scala.language.reflectiveCalls, shapeless._
