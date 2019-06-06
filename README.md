@@ -6,7 +6,7 @@
 
 **2. Examples**
 
-a) date matcher
+*a) date matcher*
 
 ```
 scala> import cats.implicits._, io.rebelapps.text.Patterns._,  scala.language.reflectiveCalls
@@ -19,7 +19,7 @@ Year:2019 month:9 day:10
 
 ```
 
-b) email matcher
+*b) email matcher*
 
 ```
 scala> import cats.implicits._, io.rebelapps.text.Patterns._,  scala.language.reflectiveCalls, shapeless._
